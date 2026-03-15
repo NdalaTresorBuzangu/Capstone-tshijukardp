@@ -1,7 +1,8 @@
 -- Tshijuka RDP – single database schema (everything in this file).
 -- Import this file once into your Hostinger database: drops existing tables, creates all tables, seeds data.
-
-USE u628771162_ndalab;
+DROP DATABASE IF EXISTS document;
+CREATE DATABASE document CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE document;
 
 CREATE TABLE `User` (
     `userID` INT PRIMARY KEY AUTO_INCREMENT,
