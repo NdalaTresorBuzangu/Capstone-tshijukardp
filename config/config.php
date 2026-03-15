@@ -5,10 +5,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Database connection settings (Hostinger database)
+// Database connection settings
 $servername = "localhost";
-$username = "u628771162_nd";
-$password = "Ndala1950@@";
-$dbname = "u628771162_ndalab"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "document"; 
+
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
