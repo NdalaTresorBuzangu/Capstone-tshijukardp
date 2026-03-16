@@ -68,6 +68,9 @@ abstract class BaseController
         if (!is_file($path)) {
             throw new \RuntimeException('View not found: ' . $viewFile);
         }
+        if (!isset($data['baseUrl'])) {
+            $data['baseUrl'] = function_exists('getBaseUrl') ? getBaseUrl() : (rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/') . '/');
+        }
         extract($data, EXTR_SKIP);
         require $path;
     }

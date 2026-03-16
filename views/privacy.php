@@ -8,7 +8,7 @@ $L = $L ?? [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($L['privacy_title'] ?? 'Privacy Policy'); ?> – Tshijuka RDP</title>
-    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/site.css">
 </head>
 <body class="form-page">
     <?php include 'nav.php'; ?>

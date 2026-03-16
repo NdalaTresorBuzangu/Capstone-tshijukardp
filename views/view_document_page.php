@@ -133,8 +133,9 @@ $isPdf = (strpos($mime, 'pdf') !== false) || (strtolower(pathinfo($doc['imagePat
 if ($docContent !== null && $docMime !== '') {
     $isPdf = (strpos($docMime, 'pdf') !== false);
 }
-$viewUrl = 'view_document.php?documentID=' . urlencode($documentID);
-$downloadUrl = 'view_document.php?documentID=' . urlencode($documentID) . '&download=1';
+$docBase = isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '');
+$viewUrl = $docBase . 'views/view_document.php?documentID=' . urlencode($documentID);
+$downloadUrl = $docBase . 'views/view_document.php?documentID=' . urlencode($documentID) . '&download=1';
 $dataUri = null;
 if ($docContent !== null && $docMime !== '') {
     $dataUri = 'data:' . $docMime . ';base64,' . base64_encode($docContent);
@@ -147,7 +148,7 @@ if ($docContent !== null && $docMime !== '') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Document <?= htmlspecialchars($documentID) ?> - Tshijuka RDP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         .viewer-toolbar { background: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 0.75rem 1rem; }
         .viewer-content { padding: 1rem; min-height: 70vh; display: flex; align-items: center; justify-content: center; background: #2b2b2b; }
@@ -171,7 +172,7 @@ if ($docContent !== null && $docMime !== '') {
             <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</button>
         </form>
     <?php endif; ?>
-    <?php $backBase = (strpos($_SERVER['SCRIPT_NAME'] ?? '', '/views/') !== false ? '../' : ''); ?>
+    <?php $backBase = isset($baseUrl) ? $baseUrl : (strpos($_SERVER['SCRIPT_NAME'] ?? '', '/views/') !== false ? '../' : ''); ?>
     <a href="<?= $backBase ?>index.php?controller=<?= $userRole === 'Admin' ? 'Admin&action=dashboard' : ($userRole === 'Document Issuer' ? 'Institution&action=panel' : 'Seeker&action=pack') ?>" class="btn btn-outline-secondary btn-sm ms-auto">← Back</a>
 </div>
 

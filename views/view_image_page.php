@@ -33,6 +33,7 @@ if ($type === 'issuer') {
 }
 
 $isPdf = (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf');
+if (!isset($baseUrl)) { $baseUrl = function_exists('getBaseUrl') ? getBaseUrl() : ''; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +42,7 @@ $isPdf = (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Document - Tshijuka RDP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         .viewer-toolbar { background: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 0.75rem 1rem; }
         .viewer-content { padding: 1rem; min-height: 70vh; display: flex; align-items: center; justify-content: center; background: #2b2b2b; }
@@ -57,7 +58,7 @@ $isPdf = (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf');
     <a href="<?= htmlspecialchars($downloadUrl) ?>" class="btn btn-primary btn-sm" download><i class="fas fa-download"></i> Download</a>
     <?php if ($canDelete): ?>
         <?php if ($type === 'issuer'): ?>
-            <form method="post" action="../actions/issuer_delete_stored_action.php" class="d-inline" onsubmit="return confirm('Delete this document?');">
+            <form method="post" action="<?= htmlspecialchars($baseUrl) ?>actions/issuer_delete_stored_action.php" class="d-inline" onsubmit="return confirm('Delete this document?');">
                 <input type="hidden" name="id" value="<?= $id ?>">
                 <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</button>
             </form>
@@ -65,7 +66,7 @@ $isPdf = (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf');
             <button type="button" class="btn btn-outline-danger btn-sm preloss-delete-btn" data-preloss-id="<?= $prelossID ?>"><i class="fas fa-trash-alt"></i> Delete</button>
         <?php endif; ?>
     <?php endif; ?>
-    <a href="<?= htmlspecialchars($backUrl) ?>" class="btn btn-outline-secondary btn-sm ms-auto">← Back</a>
+    <a href="<?= htmlspecialchars(($baseUrl ?? '') . $backUrl) ?>" class="btn btn-outline-secondary btn-sm ms-auto">← Back</a>
 </div>
 
 <div class="viewer-content">
@@ -78,15 +79,16 @@ $isPdf = (strtolower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf');
 
 <?php if ($type === 'preloss' && $canDelete): ?>
 <script>
+var BASE_URL = <?= json_encode($baseUrl) ?>;
 document.querySelector('.preloss-delete-btn')?.addEventListener('click', function() {
     if (!confirm('Delete this document? This cannot be undone.')) return;
     var prelossID = this.getAttribute('data-preloss-id');
     var fd = new FormData();
     fd.append('prelossID', prelossID);
-    fetch('../actions/preloss_delete_action.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+    fetch(BASE_URL + 'actions/preloss_delete_action.php', { method: 'POST', body: fd, credentials: 'same-origin' })
         .then(function(r) { return r.json(); })
         .then(function(data) {
-            if (data.success) window.location.href = 'index.php?controller=Seeker&action=preloss';
+            if (data.success) window.location.href = BASE_URL + 'index.php?controller=Seeker&action=preloss';
             else alert(data.message || 'Failed to delete.');
         })
         .catch(function() { alert('Error.'); });

@@ -30,7 +30,7 @@ if (!$document) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat — Document <?= htmlspecialchars($documentID) ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         :root {
             --chat-bg: #eef2f5;
@@ -99,6 +99,7 @@ if (!$document) {
 </div>
 
 <script>
+var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
 (function() {
     const documentID = "<?= htmlspecialchars($documentID, ENT_QUOTES) ?>";
     const listEl = document.getElementById('chat-list');
@@ -141,7 +142,7 @@ if (!$document) {
     }
 
     function loadMessages() {
-        fetch('index.php?controller=Chat&action=fetch&documentID=' + encodeURIComponent(documentID), { credentials: 'same-origin' })
+        fetch(BASE_URL + 'index.php?controller=Chat&action=fetch&documentID=' + encodeURIComponent(documentID), { credentials: 'same-origin' })
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 loadingEl.style.display = 'none';
@@ -170,7 +171,7 @@ if (!$document) {
         sendBtn.disabled = true;
         var formData = new FormData(form);
 
-        fetch('../actions/chat_action.php', { method: 'POST', body: formData, credentials: 'same-origin' })
+        fetch(BASE_URL + 'actions/chat_action.php', { method: 'POST', body: formData, credentials: 'same-origin' })
             .then(function(r) { return r.json(); })
             .then(function(res) {
                 messageInput.value = '';

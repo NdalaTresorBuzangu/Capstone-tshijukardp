@@ -26,8 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Use same viewer as issuing institution (view_document.php streams file from correct path)
             if (!empty($document['imagePath'])) {
-                $viewUrl = 'view_document.php?documentID=' . urlencode($document['documentID']);
-                $viewPageUrl = '/index.php?controller=Document&action=view_page&documentID=' . urlencode($document['documentID']);
+                $progBase = isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '');
+                $viewUrl = $progBase . 'views/view_document.php?documentID=' . urlencode($document['documentID']);
+                $viewPageUrl = $progBase . 'index.php?controller=Document&action=view_page&documentID=' . urlencode($document['documentID']);
                 $statusMessage .= '<div class="document-image-wrap">';
                 $statusMessage .= "<a href='" . htmlspecialchars($viewPageUrl) . "' target='_blank' rel='noopener'>View document (open / download / delete)</a>";
                 $statusMessage .= "<img src='" . htmlspecialchars($viewUrl) . "' alt='Document' style='max-width: 800px; width: 100%; height: auto; max-height: 600px; display: block; margin-top: 8px;'>";
@@ -53,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($L['track_progress'] ?? 'Track progress') ?> - Tshijuka RDP</title>
-    <link rel="stylesheet" href="../assets/nav.css">
-    <link rel="stylesheet" href="../assets/progress.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/progress.css">
     <style>body{background:url('<?php echo htmlspecialchars($bgImage ?? '../assets/nature-7047433_1280.jpg'); ?>') no-repeat center center fixed;background-size:cover;}</style>
 </head>
 <body>

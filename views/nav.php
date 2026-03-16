@@ -8,7 +8,7 @@ if (!isset($L) || !is_array($L)) {
 $L = $L ?? [];
 $loggedIn = !empty($_SESSION['user_id']);
 $showLogout = !empty($showLogout);
-$navBase = (strpos($_SERVER['SCRIPT_NAME'] ?? '', 'views/') !== false) ? '../' : '';
+$navBase = isset($baseUrl) ? $baseUrl : ((strpos($_SERVER['SCRIPT_NAME'] ?? '', 'views/') !== false) ? '../' : '');
 ?>
 <nav class="navbar">
     <img src="<?php echo $navBase ? $navBase . 'assets/logo.jpg' : 'assets/logo.jpg'; ?>" alt="Tshijuka RDP" class="logo">
@@ -18,10 +18,10 @@ $navBase = (strpos($_SERVER['SCRIPT_NAME'] ?? '', 'views/') !== false) ? '../' :
         <li><a href="<?php echo $navBase; ?>index.php?controller=Page&action=terms"><?php echo htmlspecialchars($L['terms_short'] ?? 'Terms'); ?></a></li>
         <li><a href="<?php echo $navBase; ?>index.php?controller=Page&action=privacy"><?php echo htmlspecialchars($L['privacy_short'] ?? 'Privacy'); ?></a></li>
         <?php if ($loggedIn && $showLogout): ?>
-            <li><a href="index.php?controller=Auth&action=logout" class="nav-logout"><?php echo htmlspecialchars($L['logout'] ?? 'Log out'); ?></a></li>
+            <li><a href="<?php echo $navBase; ?>index.php?controller=Auth&action=logout" class="nav-logout"><?php echo htmlspecialchars($L['logout'] ?? 'Log out'); ?></a></li>
         <?php elseif (!$loggedIn): ?>
-            <li><a href="index.php?controller=Auth&action=login_form"><?php echo htmlspecialchars($L['login'] ?? 'Log in'); ?></a></li>
-            <li><a href="index.php?controller=Auth&action=signup_form"><?php echo htmlspecialchars($L['signup'] ?? 'Sign up'); ?></a></li>
+            <li><a href="<?php echo $navBase; ?>index.php?controller=Auth&action=login_form"><?php echo htmlspecialchars($L['login'] ?? 'Log in'); ?></a></li>
+            <li><a href="<?php echo $navBase; ?>index.php?controller=Auth&action=signup_form"><?php echo htmlspecialchars($L['signup'] ?? 'Sign up'); ?></a></li>
         <?php endif; ?>
     </ul>
 </nav>

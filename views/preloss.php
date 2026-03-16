@@ -29,7 +29,7 @@ if ($stmt) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($L['preloss_page_title']) ?> - Tshijuka RDP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         body { background: #f5f5f5; padding-top: 80px; }
         .preloss-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 1.5rem; margin-bottom: 1rem; }
@@ -51,7 +51,7 @@ if ($stmt) {
             <h1 class="h3 mb-0"><?= htmlspecialchars($L['preloss_page_title'] ?? 'Store documents (pre-loss)') ?></h1>
             <p class="preloss-lead"><?= htmlspecialchars($L['preloss_lead'] ?? $L['preloss_desc'] ?? 'Upload and store copies of your important documents here. If you ever lose the originals, you will have a secure backup.') ?></p>
         </div>
-        <a href="student_dashboard.php" class="btn btn-outline-secondary">← <?= htmlspecialchars($L['back_dashboard'] ?? 'Back to Dashboard') ?></a>
+        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Seeker&action=dashboard" class="btn btn-outline-secondary">← <?= htmlspecialchars($L['back_dashboard'] ?? 'Back to Dashboard') ?></a>
     </div>
 
     <!-- Upload form: same pattern as request box – multiple rows, multi-file + take picture -->
@@ -119,6 +119,7 @@ if ($stmt) {
 </div>
 
 <script>
+var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
 (function() {
     const form = document.getElementById('prelossForm');
     const status = document.getElementById('uploadStatus');
@@ -163,7 +164,7 @@ if ($stmt) {
 
         const fd = new FormData(this);
         try {
-            const res = await fetch('../actions/preloss_upload_action.php', { method: 'POST', body: fd });
+            const res = await fetch(BASE_URL + 'actions/preloss_upload_action.php', { method: 'POST', body: fd });
             const data = await res.json();
             if (data.success) {
                 status.textContent = data.message;
@@ -193,7 +194,7 @@ if ($stmt) {
             const fd = new FormData();
             fd.append('prelossID', id);
             try {
-                const res = await fetch('../actions/preloss_delete_action.php', { method: 'POST', body: fd });
+                const res = await fetch(BASE_URL + 'actions/preloss_delete_action.php', { method: 'POST', body: fd });
                 const data = await res.json();
                 if (data.success) {
                     const row = document.querySelector('.preloss-item[data-preloss-id="' + id + '"]');

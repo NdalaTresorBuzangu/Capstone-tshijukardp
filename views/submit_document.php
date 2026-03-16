@@ -29,8 +29,8 @@ if ($result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Document - Tshijuka RDP</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/submit-document.css">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/submit-document.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
@@ -160,6 +160,7 @@ if ($result) {
 </main>
 
 <script>
+var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
 // Paystack public key
 const PAYSTACK_PUBLIC_KEY = 'pk_test_11c4dffd1bfb8c9efb25eceb0b6132aa85761747';
 const currentUserID = <?= $currentUserID ?>;
@@ -288,7 +289,7 @@ document.getElementById('payNowBtn').addEventListener('click', async function() 
         paymentStatus.style.display = 'block';
         
         // Initialize payment
-        const paymentResponse = await fetch('../actions/initialize_payment.php', {
+        const paymentResponse = await fetch(BASE_URL + 'actions/initialize_payment.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -402,7 +403,7 @@ async function verifyPayment(paymentReference) {
         paymentStatus.textContent = 'Verifying payment...';
         
         // Verify payment
-        const verifyResponse = await fetch(`../actions/verify_payment.php?reference=${paymentReference}`);
+        const verifyResponse = await fetch(BASE_URL + 'actions/verify_payment.php?reference=' + encodeURIComponent(paymentReference));
         
         // Read response text once
         const responseText = await verifyResponse.text();
@@ -501,7 +502,7 @@ async function submitDocument() {
     }
     
     try {
-        const response = await fetch('../actions/submitdocument_action.php', {
+        const response = await fetch(BASE_URL + 'actions/submitdocument_action.php', {
             method: 'POST',
             body: formData,
         });

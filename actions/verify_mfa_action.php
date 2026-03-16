@@ -42,12 +42,13 @@ $_SESSION['user_id'] = (int) $_SESSION['mfa_pending_user_id'];
 $_SESSION['user_role'] = $_SESSION['mfa_pending_role'];
 $_SESSION['username'] = $_SESSION['mfa_pending_username'];
 
-// Determine redirect based on role
+// Determine redirect based on role (use base URL so redirect works in subfolder e.g. /aa/)
+$base = function_exists('getBaseUrl') ? getBaseUrl() : '';
 $redirect = match ($_SESSION['user_role']) {
-    'Document Seeker' => 'student_dashboard.php',
-    'Document Issuer' => 'subscribe_institution.php',
-    'Admin' => 'admin_landing.php',
-    default => 'login.php'
+    'Document Seeker' => $base . 'index.php?controller=Seeker&action=dashboard',
+    'Document Issuer' => $base . 'index.php?controller=Institution&action=subscribe',
+    'Admin' => $base . 'index.php?controller=Admin&action=dashboard',
+    default => $base . 'index.php?controller=Auth&action=login_form'
 };
 
 // Clear MFA session data

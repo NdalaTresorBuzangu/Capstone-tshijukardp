@@ -24,8 +24,8 @@ if (!empty($_SESSION['mfa_pending_email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter your code - Tshijuka RDP</title>
-    <link rel="stylesheet" href="../assets/nav.css">
-    <link rel="stylesheet" href="../assets/styles.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>body{background:url('<?php echo htmlspecialchars($bgImage ?? '../assets/nature-7047433_1280.jpg'); ?>') no-repeat center center fixed;background-size:cover;}</style>
     <style>
@@ -60,6 +60,7 @@ if (!empty($_SESSION['mfa_pending_email'])) {
     </div>
 
     <script>
+        var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
         document.getElementById('mfaForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const code = document.getElementById('mfa_code').value.trim();
@@ -70,10 +71,10 @@ if (!empty($_SESSION['mfa_pending_email'])) {
             formData.append('mfa_code', code);
 
             try {
-                const response = await fetch('../actions/verify_mfa_action.php', { method: 'POST', body: formData });
+                const response = await fetch(BASE_URL + 'actions/verify_mfa_action.php', { method: 'POST', body: formData });
                 const result = await response.json();
                 if (result.success) {
-                    window.location.href = result.redirect || 'student_dashboard.php';
+                    window.location.href = result.redirect || (BASE_URL + 'index.php?controller=Seeker&action=dashboard');
                 } else {
                     errEl.style.display = 'block';
                     errEl.innerText = result.message || 'Invalid code. Please try again.';

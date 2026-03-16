@@ -5,7 +5,7 @@ if (!isset($L)) require_once __DIR__ . '/../config/lang.php';
 isLogin();
 
 if ($_SESSION['user_role'] !== 'Document Seeker') {
-    header('Location: student_dashboard.php');
+    header('Location: ' . (function_exists('getBaseUrl') ? getBaseUrl() : '') . 'index.php?controller=Seeker&action=dashboard');
     exit;
 }
 
@@ -26,7 +26,7 @@ if ($mfa_stmt) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email verification - Tshijuka RDP</title>
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>body{background:url('<?php echo htmlspecialchars($bgImage ?? '../assets/nature-7047433_1280.jpg'); ?>') no-repeat center center fixed;background-size:cover;}</style>
     <style>
@@ -47,7 +47,7 @@ if ($mfa_stmt) {
                     <strong><?= htmlspecialchars($L['email_on']) ?></strong> <?= htmlspecialchars($L['email_on_desc']) ?>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="student_dashboard.php" class="btn btn-primary"><?= htmlspecialchars($L['back_dashboard']) ?></a>
+                    <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Seeker&action=dashboard" class="btn btn-primary"><?= htmlspecialchars($L['back_dashboard']) ?></a>
                 </div>
             <?php else: ?>
                 <div id="step1">
@@ -73,7 +73,7 @@ if ($mfa_stmt) {
                         <strong><?= htmlspecialchars($L['done']) ?></strong> <?= htmlspecialchars($L['done_desc']) ?>
                     </div>
                     <div class="text-center mt-3">
-                        <a href="student_dashboard.php" class="btn btn-primary"><?= htmlspecialchars($L['back_dashboard']) ?></a>
+                        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Seeker&action=dashboard" class="btn btn-primary"><?= htmlspecialchars($L['back_dashboard']) ?></a>
                     </div>
                 </div>
             <?php endif; ?>
@@ -83,6 +83,7 @@ if ($mfa_stmt) {
 
 <?php if (!$mfa_already_enabled): ?>
 <script>
+var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
 const btnSend = document.getElementById('btnSendCode');
 const step1 = document.getElementById('step1');
 const step2 = document.getElementById('step2');
@@ -102,7 +103,7 @@ function maskEmail(email) {
 async function sendCode() {
     btnSend.disabled = true;
     try {
-        const r = await fetch('../actions/mfa_setup_action.php');
+        const r = await fetch(BASE_URL + 'actions/mfa_setup_action.php');
         const d = await r.json();
         if (d.success) {
             emailDisplay.textContent = maskEmail(d.email || 'your email');
@@ -127,7 +128,7 @@ confirmForm.addEventListener('submit', async function(e) {
     const formData = new FormData();
     formData.append('mfa_code', code);
     try {
-        const r = await fetch('../actions/mfa_enable_action.php', { method: 'POST', body: formData });
+        const r = await fetch(BASE_URL + 'actions/mfa_enable_action.php', { method: 'POST', body: formData });
         const d = await r.json();
         if (d.success) {
             step2.style.display = 'none';

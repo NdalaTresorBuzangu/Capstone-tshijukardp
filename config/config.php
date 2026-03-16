@@ -4,11 +4,32 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Base URL for assets (CSS, JS, images). Leave empty to auto-detect from request.
+// On local XAMPP in subfolder use e.g. '/aa/' so assets load correctly.
+// if (!defined('BASE_URL')) { define('BASE_URL', '/aa/'); }
+
+if (!function_exists('getBaseUrl')) {
+    function getBaseUrl(): string {
+        if (defined('BASE_URL') && BASE_URL !== '') {
+            return rtrim(BASE_URL, '/') . '/';
+        }
+        $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $dir = rtrim(dirname($script), '/');
+        // If we are in a subdirectory like /aa/views, strip the trailing /views
+        if (substr($dir, -6) === '/views') {
+            $dir = substr($dir, 0, -6);
+        }
+        return ($dir === '' ? '/' : $dir . '/');
+    }
+}
+
 // Database connection settings (Hostinger database)
+// Database connection settings
 $servername = "localhost";
-$username = "u628771162_nd";
-$password = "Ndala1950@@";
-$dbname = "u628771162_ndalab"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "document"; 
+
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

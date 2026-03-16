@@ -11,7 +11,7 @@ $pageTitle = isset($L['api']) ? $L['api'] : 'API';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/site.css">
     <style>
         .result { margin-top: 1.5rem; padding: 1rem; border-radius: 12px; text-align: left; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap; word-break: break-all; display: none; background: var(--blue-50); border: 1px solid var(--blue-200); }
         .result.success { display: block; background: #f0fdf4; border-color: #22c55e; }

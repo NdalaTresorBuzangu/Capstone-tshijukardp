@@ -22,7 +22,8 @@ $stmt->close();
 
 if ($result && $result->num_rows > 0) {
     // Already subscribed → go to dashboard
-    header("Location: admissions_dashboard.php");
+    $base = function_exists('getBaseUrl') ? getBaseUrl() : '';
+    header("Location: " . $base . (strpos($base, 'views/') !== false ? '' : 'views/') . "admissions_dashboard.php");
     exit();
 }
 
@@ -49,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateStmt->execute();
             $updateStmt->close();
 
-            header("Location: admissions_dashboard.php");
+            $base = function_exists('getBaseUrl') ? getBaseUrl() : '';
+            header("Location: " . $base . (strpos($base, 'views/') !== false ? '' : 'views/') . "admissions_dashboard.php");
             exit();
         } else {
             $error = "Failed to save subscription: " . $conn->error;

@@ -92,7 +92,7 @@ if (!$documents) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Institution Dashboard — <?= htmlspecialchars($issuer['documentIssuerName']) ?> | Tshijuka RDP</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         :root { --issuer-primary: #0d6efd; --issuer-dark: #0a58ca; --issuer-bg: #f8fafc; }
         body { background: var(--issuer-bg); padding-top: 76px; min-height: 100vh; }
@@ -229,7 +229,7 @@ if (!$documents) {
                                                         <button type="submit" name="updateDocumentStatus" value="<?= htmlspecialchars($row['documentID']) ?>" class="btn btn-sm btn-primary">Update</button>
                                                     </form>
                                                     <?php if (!empty($row['imagePath'])): ?>
-                                                        <a href="/index.php?controller=Document&action=view_page&documentID=<?= urlencode($row['documentID']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary">View</a>
+                                                        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Document&action=view_page&documentID=<?= urlencode($row['documentID']) ?>" target="_blank" class="btn btn-sm btn-outline-secondary">View</a>
                                                     <?php endif; ?>
                                                     <a href="index.php?controller=Chat&action=index&documentID=<?= urlencode($row['documentID']) ?>&personID=<?= urlencode($row['personID']) ?>" class="btn btn-sm btn-success">Chat</a>
                                                 </div>
@@ -252,7 +252,7 @@ if (!$documents) {
         <div class="card-header">3. Manage documents</div>
         <div class="card-body">
             <p class="mb-3">Upload and store documents on the platform to prevent loss even when a request has not yet come from document seekers. Use this when you are in unstable environments—digitize and protect records in advance.</p>
-            <a href="/index.php?controller=Institution&action=upload_documents" class="btn btn-primary">Upload documents to prevent loss</a>
+            <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Institution&action=upload_documents" class="btn btn-primary">Upload documents to prevent loss</a>
         </div>
     </div>
 </div>

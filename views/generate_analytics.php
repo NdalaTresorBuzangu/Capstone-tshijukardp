@@ -7,7 +7,7 @@ include __DIR__ . '/../config/core.php';
 
 isLogin();
 if (!isAdmin()) {
-    header('Location: /index.php?controller=Admin&action=dashboard');
+    header('Location: ' . (isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '')) . 'index.php?controller=Admin&action=dashboard');
     exit;
 }
 
@@ -29,6 +29,13 @@ try {
 } catch (Exception $e) {
     $analyticsError = 'Error fetching analytics: ' . $e->getMessage();
 }
+
+// Ensure base URL is available when this view is loaded directly (e.g. /aa/views/generate_analytics.php)
+if (!isset($baseUrl)) {
+    $baseUrl = function_exists('getBaseUrl')
+        ? getBaseUrl()
+        : (rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/') . '/');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +43,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <title>Analytics - Tshijuka RDP</title>
     <style>
         .stat-card { transition: transform 0.2s; }
@@ -49,7 +56,7 @@ try {
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Documents Analytics</h1>
-        <a href="/index.php?controller=Admin&action=dashboard" class="btn btn-outline-secondary">← Back to Admin Dashboard</a>
+        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Admin&action=dashboard" class="btn btn-outline-secondary">← Back to Admin Dashboard</a>
     </div>
 
     <?php if (!empty($analyticsError)): ?>

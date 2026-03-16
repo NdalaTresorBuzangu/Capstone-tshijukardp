@@ -8,8 +8,8 @@ include __DIR__ . '/../actions/document_action.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recent Documents - CampusFixIt</title>
-    <link rel="stylesheet" href="../assets/nav.css"> <!-- Link the navigation bar styles -->
-    <link rel="stylesheet" href="../assets/documents.css"> <!-- Link the page-specific styles -->
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css"> <!-- Link the navigation bar styles -->
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/documents.css"> <!-- Link the page-specific styles -->
 </head>
 <body>
     <!-- Include the navigation bar -->

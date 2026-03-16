@@ -46,6 +46,7 @@ $students = $stmt->get_result();
 $stmt->close();
 
 $selectedDocumentID = $_GET['documentID'] ?? '';
+if (!isset($baseUrl)) { $baseUrl = function_exists('getBaseUrl') ? getBaseUrl() : ''; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,7 +55,7 @@ $selectedDocumentID = $_GET['documentID'] ?? '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat — <?= htmlspecialchars($issuer['documentIssuerName']) ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         :root {
             --chat-bg: #eef2f5;
@@ -88,7 +89,7 @@ $selectedDocumentID = $_GET['documentID'] ?? '';
 <?php $showLogout = true; include 'nav.php'; ?>
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0">Chat with <?= htmlspecialchars($issuer['documentIssuerName']) ?></h5>
-        <a href="admissions_dashboard.php" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        <a href="<?= htmlspecialchars((strpos($baseUrl, 'views/') !== false ? $baseUrl : $baseUrl . 'views/') . 'admissions_dashboard.php') ?>" class="btn btn-secondary btn-sm">Back to Dashboard</a>
     </div>
 
     <div class="mb-3">
@@ -134,6 +135,7 @@ $selectedDocumentID = $_GET['documentID'] ?? '';
 
 <?php if (!empty($selectedDocumentID)): ?>
 <script>
+var BASE_URL = <?= json_encode($baseUrl) ?>;
 (function() {
     const documentID = "<?= htmlspecialchars($selectedDocumentID, ENT_QUOTES) ?>";
     const documentIssuerID = "<?= (int) $documentIssuerID ?>";
@@ -176,7 +178,7 @@ $selectedDocumentID = $_GET['documentID'] ?? '';
         if (container) container.scrollTop = container.scrollHeight;
     }
     function loadMessages() {
-        fetch('admissions_chat_fetch.php?documentID=' + encodeURIComponent(documentID) + '&documentIssuerID=' + documentIssuerID, { credentials: 'same-origin' })
+        fetch(BASE_URL + 'admissions_chat_fetch.php?documentID=' + encodeURIComponent(documentID) + '&documentIssuerID=' + documentIssuerID, { credentials: 'same-origin' })
             .then(function(r) { return r.json(); })
             .then(function(data) {
                 loadingEl.style.display = 'none';
@@ -195,7 +197,7 @@ $selectedDocumentID = $_GET['documentID'] ?? '';
         if (!text && (!file || !file.files.length)) return;
         sendBtn.disabled = true;
         var formData = new FormData(form);
-        fetch('../actions/admissions_chat_send.php', { method: 'POST', body: formData, credentials: 'same-origin' })
+        fetch(BASE_URL + 'actions/admissions_chat_send.php', { method: 'POST', body: formData, credentials: 'same-origin' })
             .then(function(r) { return r.json(); })
             .then(function(res) {
                 messageInput.value = '';

@@ -63,7 +63,7 @@ $images = fetchSubmittedImages();
                     <h3>Document ID: <?php echo htmlspecialchars($image['documentID']); ?></h3>
                     <p>Submitted by: <?php echo htmlspecialchars($image['userName']); ?></p>
                     <!-- imagePath is stored as uploads/images/... ; use view_document for consistent display -->
-                    <img src="view_document.php?documentID=<?php echo urlencode($image['documentID']); ?>" alt="Submitted Image">
+                    <img src="<?= htmlspecialchars(isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '')); ?>views/view_document.php?documentID=<?php echo urlencode($image['documentID']); ?>" alt="Submitted Image">
                 </div>
             <?php endforeach; ?>
         </div>

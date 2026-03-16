@@ -124,12 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        header("Location: /index.php?controller=Admin&action=dashboard");
+        header("Location: " . (isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '')) . "index.php?controller=Admin&action=dashboard");
         exit;
     } catch (Exception $e) {
         $_SESSION['message'] = $e->getMessage();
         $_SESSION['message_type'] = "error";
-        header("Location: /index.php?controller=Admin&action=dashboard");
+        header("Location: " . (isset($baseUrl) ? $baseUrl : (function_exists('getBaseUrl') ? getBaseUrl() : '')) . "index.php?controller=Admin&action=dashboard");
         exit;
     }
 }
@@ -165,8 +165,8 @@ function statusBadgeClass($statusName) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/nav.css">
-    <link rel="stylesheet" href="../assets/admin.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/admin.css">
     <script src="https://kit.fontawesome.com/cb76afc7c2.js" crossorigin="anonymous"></script>
     <title>Admin Dashboard - Tshijuka RDP</title>
 </head>
@@ -364,9 +364,9 @@ function statusBadgeClass($statusName) {
                             <td>
                                 <?php if (!empty($doc['imagePath']) || !empty($doc['imageData'])): ?>
                                     <div class="admin-doc-thumb-wrap">
-                                        <a href="/index.php?controller=Document&action=view_page&documentID=<?php echo urlencode($doc['documentID']); ?>" target="_blank" rel="noopener" class="btn btn-sm btn-primary me-1">View</a>
-                                        <a href="view_document.php?documentID=<?php echo urlencode($doc['documentID']); ?>&download=1" class="btn btn-sm btn-success me-1">Download</a>
-                                        <img src="view_document.php?documentID=<?php echo urlencode($doc['documentID']); ?>" alt="Doc" class="admin-doc-thumb" style="max-height:40px" onerror="this.style.display='none'">
+                                        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Document&action=view_page&documentID=<?php echo urlencode($doc['documentID']); ?>" target="_blank" rel="noopener" class="btn btn-sm btn-primary me-1">View</a>
+                                        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>views/view_document.php?documentID=<?php echo urlencode($doc['documentID']); ?>&download=1" class="btn btn-sm btn-success me-1">Download</a>
+                                        <img src="<?= htmlspecialchars($baseUrl ?? ''); ?>views/view_document.php?documentID=<?php echo urlencode($doc['documentID']); ?>" alt="Doc" class="admin-doc-thumb" style="max-height:40px" onerror="this.style.display='none'">
                                     </div>
                                 <?php else: ?>
                                     <span class="text-muted small">—</span>

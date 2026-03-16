@@ -55,7 +55,7 @@ foreach ($documentTypes as $dt) $typeNames[$dt['documentTypeID']] = $dt['typeNam
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload documents to platform - Tshijuka RDP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <style>
         body { background: #f5f5f5; padding-top: 80px; }
         .issuer-upload-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 1.5rem; margin-bottom: 1rem; }
@@ -76,7 +76,7 @@ foreach ($documentTypes as $dt) $typeNames[$dt['documentTypeID']] = $dt['typeNam
             <h1 class="h3 mb-0">Upload documents to platform</h1>
             <p class="issuer-upload-lead">Upload and store documents on the platform without waiting for a request from document seekers. Useful when you are in unstable environments—digitize and protect records in advance.</p>
         </div>
-        <a href="institutionpanel.php" class="btn btn-outline-secondary">← Back to dashboard</a>
+        <a href="<?= htmlspecialchars($baseUrl ?? ''); ?>index.php?controller=Institution&action=panel" class="btn btn-outline-secondary">← Back to dashboard</a>
     </div>
 
     <!-- Upload form: same pattern as request box / preloss -->
@@ -162,6 +162,7 @@ foreach ($documentTypes as $dt) $typeNames[$dt['documentTypeID']] = $dt['typeNam
 </div>
 
 <script>
+var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
 (function() {
     const form = document.getElementById('issuerUploadForm');
     const status = document.getElementById('issuerUploadStatus');
@@ -204,7 +205,7 @@ foreach ($documentTypes as $dt) $typeNames[$dt['documentTypeID']] = $dt['typeNam
         uploadBtn.disabled = true;
         const fd = new FormData(this);
         try {
-            const res = await fetch('../actions/issuer_upload_action.php', { method: 'POST', body: fd });
+            const res = await fetch(BASE_URL + 'actions/issuer_upload_action.php', { method: 'POST', body: fd });
             const data = await res.json();
             if (data.success) {
                 status.textContent = data.message;
@@ -233,7 +234,7 @@ foreach ($documentTypes as $dt) $typeNames[$dt['documentTypeID']] = $dt['typeNam
             const fd = new FormData();
             fd.append('id', id);
             try {
-                const res = await fetch('../actions/issuer_delete_stored_action.php', { method: 'POST', body: fd });
+                const res = await fetch(BASE_URL + 'actions/issuer_delete_stored_action.php', { method: 'POST', body: fd });
                 const data = await res.json();
                 if (data.success) {
                     const row = document.querySelector('.issuer-upload-item[data-issuer-stored-id="' + id + '"]');

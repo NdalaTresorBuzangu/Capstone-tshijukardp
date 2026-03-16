@@ -89,6 +89,17 @@ $metadata = [
 // Initialize cURL
 $curl = curl_init();
 
+// Build callback URL using application base URL (works in subfolder like /aa/)
+$scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+// getBaseUrl() returns something like /aa/
+$basePath = function_exists('getBaseUrl') ? getBaseUrl() : (rtrim(dirname(dirname($_SERVER['PHP_SELF'] ?? '')), '/') . '/');
+// Ensure basePath starts with a slash and has no double slashes when concatenated
+if ($basePath === '/' || $basePath === '') {
+    $basePath = '/';
+}
+$callbackUrl = $scheme . $host . rtrim($basePath, '/') . '/actions/verify_payment.php?reference=' . urlencode($reference);
+
 // Set cURL options
 curl_setopt_array($curl, [
     CURLOPT_URL => "https://api.paystack.co/transaction/initialize",
@@ -99,7 +110,7 @@ curl_setopt_array($curl, [
         'amount' => $amountInPesewas,
         'reference' => $reference,
         'metadata' => $metadata,
-        'callback_url' => (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . dirname(dirname($_SERVER['PHP_SELF'])) . '/actions/verify_payment.php?reference=' . $reference
+        'callback_url' => $callbackUrl
     ]),
     CURLOPT_HTTPHEADER => [
         "Authorization: Bearer " . $secretKey,

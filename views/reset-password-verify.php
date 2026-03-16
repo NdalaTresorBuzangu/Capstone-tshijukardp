@@ -17,7 +17,7 @@ unset($_SESSION['recovery_success'], $_SESSION['recovery_error'], $_SESSION['rec
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/site.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/site.css">
 </head>
 <body class="form-page">
     <?php include 'nav.php'; ?>

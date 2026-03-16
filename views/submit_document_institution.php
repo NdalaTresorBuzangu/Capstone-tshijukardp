@@ -13,8 +13,8 @@ $issuerID = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Documents - Document Issuing Institution | Tshijuka RDP</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/submit-document.css">
-    <link rel="stylesheet" href="../assets/nav.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/submit-document.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl ?? ''; ?>assets/nav.css">
     <script src="https://kit.fontawesome.com/cb76afc7c2.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -89,6 +89,7 @@ $issuerID = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
     </footer>
 
     <script>
+    var BASE_URL = <?= json_encode($baseUrl ?? (function_exists('getBaseUrl') ? getBaseUrl() : '')) ?>;
     function reindexDocumentRows() {
         var rows = document.querySelectorAll('.document-row');
         rows.forEach(function(row, idx) {
@@ -126,7 +127,7 @@ $issuerID = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
         var formData = new FormData(this);
         try {
-            var response = await fetch('../actions/submitdocument_action.php', { method: 'POST', body: formData });
+            var response = await fetch(BASE_URL + 'actions/submitdocument_action.php', { method: 'POST', body: formData });
             var result = await response.json();
             if (result.success) {
                 var ids = result.documentIDs && result.documentIDs.length ? result.documentIDs : (result.documentID || result.documentId ? [result.documentID || result.documentId] : []);
